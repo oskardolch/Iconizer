@@ -28,8 +28,8 @@ typedef struct
   BYTE        bHeight;         // Height, in pixels, of the image
   BYTE        bColorCount;     // Number of colors in image (0 if >=8bpp)
   BYTE        bReserved;       // Reserved ( must be 0)
-  WORD        wPlanes;         // Color Planes
-  WORD        wBitCount;       // Bits per pixel
+  WORD        wPlanes;         // Color Planes - or X hotspot for CUR file
+  WORD        wBitCount;       // Bits per pixel - or Y hotspot for CUR file
   DWORD       dwBytesInRes;    // How many bytes in this resource?
   DWORD       dwImageOffset;   // Where in the file is this image?
 } ICONDIRENTRY, *LPICONDIRENTRY;

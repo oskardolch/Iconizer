@@ -476,7 +476,7 @@ BOOL CMainForm::ReadIconFile(HWND hWnd, BOOL bClearLB, LPTSTR sFileName)
     int idx, width, height;;
 
     fread(&icd, 1, 6, fp);
-    if(icd.idReserved == 0 && icd.idType == 1)
+    if(icd.idReserved == 0) // && icd.idType == 1)
     {
       bRes = icd.idCount > 0;
       int iListBase = SendMessage(lb, LB_GETCOUNT, 0, 0);
@@ -690,7 +690,7 @@ INT_PTR CMainForm::AddImage(HWND hWnd)
 #endif
   if(GetOpenFileName(&ofn))
   {
-    if(IsIcoFile(namebuf))
+    if(GetIcoFileType(namebuf) > 0)
     {
       if(ReadIconFile(hWnd, FALSE, namebuf)) m_bHasChanged = TRUE;
     }
@@ -719,12 +719,14 @@ INT_PTR CMainForm::NewFile(HWND hWnd)
   return TRUE;
 }
 
-BOOL CMainForm::IsIcoFile(LPTSTR sFileName)
+INT CMainForm::GetIcoFileType(LPTSTR sFileName)
 {
   int slen = _tcslen(sFileName);
   if(slen < 4) return FALSE;
 
-  BOOL bRes = _tcsicmp(&sFileName[slen - 4], _T(".ico")) == 0;
+  BOOL bRes = (_tcsicmp(&sFileName[slen - 4], _T(".ico")) == 0) ||
+    (_tcsicmp(&sFileName[slen - 4], _T(".cur")) == 0);
+  INT iRes = 0;
   if(bRes)
   {
     FILE *fp = _tfopen(sFileName, _T("rb"));
@@ -733,13 +735,16 @@ BOOL CMainForm::IsIcoFile(LPTSTR sFileName)
       ICONDIR icd;
 
       bRes = fread(&icd, 1, 6, fp) > 5;
-      bRes = bRes && icd.idReserved == 0 && icd.idType == 1;
+      if(bRes && icd.idReserved == 0)
+      {
+        if(icd.idType == 1) iRes = 1;
+        else if(icd.idType == 2) iRes = 2;
+      }
 
       fclose(fp);
     }
-    else bRes = FALSE;
   }
-  return bRes;
+  return iRes;
 }
 
 INT_PTR CMainForm::ImageDelete(HWND hWnd)

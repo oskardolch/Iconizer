@@ -56,7 +56,7 @@ private:
   INT_PTR ListBoxDropped(HWND hWnd, int idCtl, HWND hwndCtl, POINT ptCursor);
   INT_PTR AddImage(HWND hWnd);
   INT_PTR NewFile(HWND hWnd);
-  BOOL IsIcoFile(LPTSTR sFileName);
+  INT GetIcoFileType(LPTSTR sFileName); // 1 - ICO, 2 - CUR, 3 - Unknown
   INT_PTR ImageDelete(HWND hWnd);
   INT_PTR ImageEdit(HWND hWnd);
   INT_PTR ImageSave(HWND hWnd);
