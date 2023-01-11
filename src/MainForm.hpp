@@ -27,55 +27,53 @@
 class CMainForm
 {
 private:
-    LPTSTR m_sAppName;
-    HINSTANCE m_hInstance;
-    BOOL m_bHasChanged;
-    TCHAR m_sLastOpenPath[MAX_PATH], m_sCurFileName[MAX_PATH];
-    UINT m_uiLBDragMsg;
-    int m_iDragItem;
-    CAddImageDlg *m_AddImgDlg;
-    CEditImageDlg *m_EditImgDlg;
+  LPTSTR m_sAppName;
+  HINSTANCE m_hInstance;
+  BOOL m_bHasChanged;
+  TCHAR m_sLastOpenPath[MAX_PATH], m_sCurFileName[MAX_PATH];
+  UINT m_uiLBDragMsg;
+  int m_iDragItem;
+  CAddImageDlg *m_AddImgDlg;
+  CEditImageDlg *m_EditImgDlg;
 
-    void RestoreSettings(HWND hWnd);
-    void SaveSettings(HWND hWnd);
-    BOOL ExitApp(HWND hWnd);
-    INT_PTR OpenFile(HWND hWnd);
-    void EnableMenuItems(HWND hWnd);
-    void OpenIconFile(HWND hWnd, LPTSTR sFileName);
-    BOOL CheckChangedFile(HWND hWnd);
-    INT_PTR SaveFile(HWND hWnd);
-    BOOL SaveFileAs(HWND hWnd);
-    BOOL ReadIconFile(HWND hWnd, BOOL bClearLB, LPTSTR sFileName);
-    void SaveIconFile(HWND hWnd);
-    INT_PTR ListBoxChange(HWND hWnd, HWND hwndCtl);
-    void ClearListBox(HWND hWnd);
-    INT_PTR ListBoxDragMsg(HWND hWnd, int idCtl, LPDRAGLISTINFO pDragInfo);
-    INT_PTR ListBoxBeginDrag(HWND hWnd, int idCtl, HWND hwndCtl, POINT ptCursor);
-    INT_PTR ListBoxCancelDrag(HWND hWnd, int idCtl, HWND hwndCtl, POINT ptCursor);
-    INT_PTR ListBoxDragging(HWND hWnd, int idCtl, HWND hwndCtl, POINT ptCursor);
-    INT_PTR ListBoxDropped(HWND hWnd, int idCtl, HWND hwndCtl, POINT ptCursor);
-    INT_PTR AddImage(HWND hWnd);
-    INT_PTR NewFile(HWND hWnd);
-    BOOL IsIcoFile(LPTSTR sFileName);
-    INT_PTR ImageDelete(HWND hWnd);
-    INT_PTR ImageEdit(HWND hWnd);
-    INT_PTR ImageSave(HWND hWnd);
-    LPICONDATA IconDataFromAddImgData(PADDIMGDATA pAid, int iBitDepth,
-        int iWidth, int iHeight);
-    void InsertIconImages(HWND hWnd, PADDIMGDATA pAid);
+  void RestoreSettings(HWND hWnd);
+  void SaveSettings(HWND hWnd);
+  BOOL ExitApp(HWND hWnd);
+  INT_PTR OpenFile(HWND hWnd);
+  void EnableMenuItems(HWND hWnd);
+  void OpenIconFile(HWND hWnd, LPTSTR sFileName);
+  BOOL CheckChangedFile(HWND hWnd);
+  INT_PTR SaveFile(HWND hWnd);
+  BOOL SaveFileAs(HWND hWnd);
+  BOOL ReadIconFile(HWND hWnd, BOOL bClearLB, LPTSTR sFileName);
+  void SaveIconFile(HWND hWnd);
+  INT_PTR ListBoxChange(HWND hWnd, HWND hwndCtl);
+  void ClearListBox(HWND hWnd);
+  INT_PTR ListBoxDragMsg(HWND hWnd, int idCtl, LPDRAGLISTINFO pDragInfo);
+  INT_PTR ListBoxBeginDrag(HWND hWnd, int idCtl, HWND hwndCtl, POINT ptCursor);
+  INT_PTR ListBoxCancelDrag(HWND hWnd, int idCtl, HWND hwndCtl, POINT ptCursor);
+  INT_PTR ListBoxDragging(HWND hWnd, int idCtl, HWND hwndCtl, POINT ptCursor);
+  INT_PTR ListBoxDropped(HWND hWnd, int idCtl, HWND hwndCtl, POINT ptCursor);
+  INT_PTR AddImage(HWND hWnd);
+  INT_PTR NewFile(HWND hWnd);
+  BOOL IsIcoFile(LPTSTR sFileName);
+  INT_PTR ImageDelete(HWND hWnd);
+  INT_PTR ImageEdit(HWND hWnd);
+  INT_PTR ImageSave(HWND hWnd);
+  LPICONDATA IconDataFromAddImgData(PADDIMGDATA pAid, int iBitDepth, int iWidth, int iHeight);
+  void InsertIconImages(HWND hWnd, PADDIMGDATA pAid);
 
 public:
-    CMainForm(HINSTANCE hInstance, DLGPROC lpDialogFunc, HWND *phWnd,
-        HACCEL *phAccTable);
-    ~CMainForm();
+  CMainForm(HINSTANCE hInstance, DLGPROC lpDialogFunc, HWND *phWnd, HACCEL *phAccTable);
+  ~CMainForm();
 
-    // windows messages sections
-    INT_PTR WMInitDialog(HWND hWnd, HWND hwndFocus, LPARAM lInitParam);
-    INT_PTR WMCommand(HWND hWnd, WORD wNotifyCode, WORD wID, HWND hwndCtl);
-    INT_PTR WMSysCommand(HWND hWnd, WPARAM uCmdType, WORD xPos, WORD yPos);
-    INT_PTR WMDestroy(HWND hWnd);
-    INT_PTR WMClose(HWND hWnd);
-    INT_PTR WMUnknownMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+  // windows messages sections
+  INT_PTR WMInitDialog(HWND hWnd, HWND hwndFocus, LPARAM lInitParam);
+  INT_PTR WMCommand(HWND hWnd, WORD wNotifyCode, WORD wID, HWND hwndCtl);
+  INT_PTR WMSysCommand(HWND hWnd, WPARAM uCmdType, WORD xPos, WORD yPos);
+  INT_PTR WMDestroy(HWND hWnd);
+  INT_PTR WMClose(HWND hWnd);
+  INT_PTR WMUnknownMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 #endif

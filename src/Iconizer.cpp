@@ -26,69 +26,68 @@
 
 INT_PTR CALLBACK MainDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    CMainForm *mw = NULL;
-    if(uMsg == WM_INITDIALOG) mw = (CMainForm*)lParam;
-    else mw = (CMainForm*)GetWindowLongPtr(hwndDlg, DWLP_USER);
+  CMainForm *mw = NULL;
+  if(uMsg == WM_INITDIALOG) mw = (CMainForm*)lParam;
+  else mw = (CMainForm*)GetWindowLongPtr(hwndDlg, DWLP_USER);
 
-    switch(uMsg)
-    {
-    case WM_INITDIALOG:
-        return(mw->WMInitDialog(hwndDlg, (HWND)wParam, lParam));
-    case WM_COMMAND:
-        return(mw->WMCommand(hwndDlg, HIWORD(wParam), LOWORD(wParam), (HWND)lParam));
-    case WM_SYSCOMMAND:
-        return(mw->WMSysCommand(hwndDlg, wParam, LOWORD(lParam), HIWORD(lParam)));
-    case WM_DESTROY:
-        return(mw->WMDestroy(hwndDlg));
-    case WM_CLOSE:
-        return(mw->WMClose(hwndDlg));
-    default:
-        if(mw)
-            return(mw->WMUnknownMessage(hwndDlg, uMsg, wParam, lParam));
-        return(0);
-    }
+  switch(uMsg)
+  {
+  case WM_INITDIALOG:
+    return mw->WMInitDialog(hwndDlg, (HWND)wParam, lParam);
+  case WM_COMMAND:
+    return mw->WMCommand(hwndDlg, HIWORD(wParam), LOWORD(wParam), (HWND)lParam);
+  case WM_SYSCOMMAND:
+    return mw->WMSysCommand(hwndDlg, wParam, LOWORD(lParam), HIWORD(lParam));
+  case WM_DESTROY:
+    return mw->WMDestroy(hwndDlg);
+  case WM_CLOSE:
+    return mw->WMClose(hwndDlg);
+  default:
+    if(mw)
+      return mw->WMUnknownMessage(hwndDlg, uMsg, wParam, lParam);
+    return 0;
+  }
 }
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-    PSTR szCmdLine, int iCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
 {
-    MSG msg;
-    BOOL res;
+  MSG msg;
+  BOOL res;
 
-    CoInitialize(NULL);
+  CoInitialize(NULL);
 
-    INITCOMMONCONTROLSEX ictr;
-    ictr.dwSize = sizeof(INITCOMMONCONTROLSEX);
-    ictr.dwICC = ICC_STANDARD_CLASSES | ICC_BAR_CLASSES;
-    InitCommonControlsEx(&ictr);
+  INITCOMMONCONTROLSEX ictr;
+  ictr.dwSize = sizeof(INITCOMMONCONTROLSEX);
+  ictr.dwICC = ICC_STANDARD_CLASSES | ICC_BAR_CLASSES;
+  InitCommonControlsEx(&ictr);
 
-    HWND wnd = NULL;
-    HACCEL accel = NULL;
-    CMainForm *mw = new CMainForm(hInstance, MainDlgProc, &wnd, &accel);
+  HWND wnd = NULL;
+  HACCEL accel = NULL;
+  CMainForm *mw = new CMainForm(hInstance, MainDlgProc, &wnd, &accel);
 
-    BOOL Finish = false;
+  BOOL Finish = false;
 
-    while(!Finish)
+  while(!Finish)
+  {
+    res = GetMessage(&msg, 0, 0, 0);
+    if(!TranslateAccelerator(wnd, accel, &msg) && !IsDialogMessage(wnd, &msg))
     {
-        res = GetMessage(&msg, 0, 0, 0);
-        if(!TranslateAccelerator(wnd, accel, &msg) && !IsDialogMessage(wnd, &msg))
-        {
-            switch (res)
-            {
-            case -1:
-                MessageBox(wnd, _T("Error?"), _T("Debug"), MB_OK);
-            case 0:
-                Finish = true;
-            default:
-                TranslateMessage(&msg);
-                DispatchMessage(&msg);
-            }
-        }
+      switch (res)
+      {
+      case -1:
+        MessageBox(wnd, _T("Error?"), _T("Debug"), MB_OK);
+      case 0:
+        Finish = true;
+      default:
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+      }
     }
+  }
 
-    CoUninitialize();
+  CoUninitialize();
 
-    delete mw;
-    ExitProcess(0);
-    return (0);
+  delete mw;
+  ExitProcess(0);
+  return 0;
 }

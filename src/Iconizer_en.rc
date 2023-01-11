@@ -44,7 +44,7 @@ ZOOMOUTICO ICON "Images/Zoom-out.ico"
 STRINGTABLE
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 BEGIN
-    IDS_ICO_FILTER "Windows icon file (*.ico)\1*.ico\1All files\1*.*\1\1"
+    IDS_ICO_FILTER "Windows icon or cursor file (*.ico, *.cur)\1*.ico;*.cur\1All files\1*.*\1\1"
     IDS_MSG_ICOCHANGED "Icon file has been changed. Do you want to save changes?"
     IDS_DLG_WARN "Warning"
     IDS_IMG_FILTER "All supported image files (*.png, *.bmp, *.ico)\1*.png;*.bmp;*.ico\1All files\1*.*\1\1"

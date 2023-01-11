@@ -22,16 +22,14 @@
 #include "Icons.h"
 
 HBITMAP RenderIcon(HWND hWndStatic, LPICONIMAGE pIcoImg, int width, int height);
-HBITMAP RenderPNG(HWND hWndStatic, LPICONIMAGE pIcoImg, int iSizeint,
-    int *piWidth, int *piHeight);
-HBITMAP RenderBitmap(HWND hWndStatic, BYTE *pData, DWORD dwTranspCol,
-    int *piWidth, int *piHeight);
+HBITMAP RenderPNG(HWND hWndStatic, LPICONIMAGE pIcoImg, int iSizeint, int *piWidth, int *piHeight);
+HBITMAP RenderBitmap(HWND hWndStatic, BYTE *pData, DWORD dwTranspCol, int *piWidth, int *piHeight);
 void SaveIconBitmap(LPICONDATA pIcoData, FILE *fp);
 LPICONDATA PNGtoIconCopy(char *pData, int iDataSize);
 LPICONDATA PNGtoIconData(char *pData, int iDataSize, int iBitDepth,
-    int iWidth, int iHeight, BOOL bDither, BOOL bOptimize);
+  int iWidth, int iHeight, BOOL bDither, BOOL bOptimize);
 LPICONDATA BMPtoIconData(char *pData, int iDataSize, int iBitDepth,
-    int iWidth, int iHeight, DWORD dwTranspColor, BOOL bDither, BOOL bOptimize);
+  int iWidth, int iHeight, DWORD dwTranspColor, BOOL bDither, BOOL bOptimize);
 void GetEditImage(LPICONIMAGE pIcoImg, LPBITMAPINFO pBitmap, COLORREF clTransp);
 void SaveEditImage(LPICONIMAGE pIcoImg, LPBITMAPINFO pBitmap);
 

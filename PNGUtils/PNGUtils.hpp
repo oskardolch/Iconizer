@@ -29,9 +29,9 @@ extern "C" BOOL PNGImageIsPNG(long img);
 extern "C" void PNGImageGetDimen(long img, long* width, long* height);
 extern "C" int PNGImageGetBitDepth(long img);
 extern "C" int PNGImageRender(long img, int vw, int vh, HDC ADC,
-    int destw, int desth, BackgroundFunction backfnc);
+  int destw, int desth, BackgroundFunction backfnc);
 extern "C" BOOL PNGImageGetBitmaps(long img, HDC ADC,
-    HBITMAP hBmpColor, HBITMAP hBmpMask);
+  HBITMAP hBmpColor, HBITMAP hBmpMask);
 extern "C" BOOL IsPNGFile(char* buf, long bufsize);
 
 #endif
