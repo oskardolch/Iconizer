@@ -1,0 +1,9 @@
+# run "git clean -ndX" to see what files are actually ignored
+
+*.layout
+*.log
+*.zip
+Build32/*.xml
+Build32/*.o
+Build64/*.xml
+Build64/*.o

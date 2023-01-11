@@ -1,0 +1,11 @@
+LIBRARY   PNGUtils.dll
+DESCRIPTION "Decompress PNG Images"
+EXPORTS
+   PNGImageCreate       @1
+   PNGImageDestroy      @2
+   PNGImageIsPNG        @3
+   PNGImageGetDimen     @4
+   PNGImageGetBitDepth  @5
+   PNGImageRender       @6
+   PNGImageGetBitmaps   @7
+   IsPNGFile            @8

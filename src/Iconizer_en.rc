@@ -1,0 +1,167 @@
+/*
+    Copyright (C) 2009  Pavel Krejcir
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#pragma code_page(1252)
+
+//#ifdef WIN64
+#include <winnt.rh>
+#include <winuser.rh>
+//#else
+//#include <winnt.h>
+//#include <winuser.h>
+//#endif
+#include <commctrl.h>
+#include "Iconizer.rh"
+
+#define CREATEPROCESS_MANIFEST_RESOURCE_ID 1
+#define RT_MANIFEST 24
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
+
+#ifdef WIN64
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "src/Iconizer.exe.manifest.64"
+#else
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "src/Iconizer.exe.manifest.32"
+#endif
+MAINICON ICON "Images/Iconizer.ico"
+ZOOMINICO ICON "Images/Zoom-in.ico"
+ZOOMOUTICO ICON "Images/Zoom-out.ico"
+
+STRINGTABLE
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+BEGIN
+    IDS_ICO_FILTER "Windows icon file (*.ico)\1*.ico\1All files\1*.*\1\1"
+    IDS_MSG_ICOCHANGED "Icon file has been changed. Do you want to save changes?"
+    IDS_DLG_WARN "Warning"
+    IDS_IMG_FILTER "All supported image files (*.png, *.bmp, *.ico)\1*.png;*.bmp;*.ico\1All files\1*.*\1\1"
+    IDS_BMP_FILTER "Windows bitmap file (*.bmp)\1*.bmp\1All files\1*.*\1\1"
+    IDS_PNG_FILTER "PNG file (*.png)\1*.png\1All files\1*.*\1\1"
+    IDS_DLG_ERR "Error"
+    IDS_MSG_INVALIDUSERINPUT "The value entered into edit box is invalid"
+    IDS_SEL_PIXEL "Select pixel mode"
+    IDS_SEL_COLOR "Select color mode"
+    IDS_ZOOM_IN "Zoom in"
+    IDS_ZOOM_OUT "Zoom out"
+END
+
+MAINMENU MENU DISCARDABLE
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New...\tCtrl+N", IDM_FILENEW
+        MENUITEM "&Open...\tCtrl+O", IDM_FILEOPEN
+        MENUITEM "&Save\tCtrl+S", IDM_FILESAVE
+        MENUITEM "Save &As...", IDM_FILESAVEAS
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit\tAlt+F4", IDM_FILEEXIT
+    END
+    POPUP "&Image"
+    BEGIN
+        MENUITEM "&Add...\tCtrl+A", IDM_IMAGEADD
+        MENUITEM "&Load...\tCtrl+L", IDM_IMAGELOAD
+        MENUITEM "&Save...\tCtrl+I", IDM_IMAGESAVE
+        MENUITEM "&Delete\tDel", IDM_IMAGEDEL
+        MENUITEM SEPARATOR
+        MENUITEM "&Edit\tCtrl+E", IDM_IMAGEEDIT
+    END
+    POPUP "&Help", HELP
+    BEGIN
+        MENUITEM "Help &content", IDM_HELPCONTENT
+        MENUITEM "How to &use", IDM_HELPONHELP
+        MENUITEM SEPARATOR
+        MENUITEM "&About", IDM_HELPABOUT
+    END
+END
+
+1 ACCELERATORS
+BEGIN
+    "^N", IDM_FILENEW
+    "^O", IDM_FILEOPEN
+    "^S", IDM_FILESAVE
+    "^A", IDM_IMAGEADD
+    "^L", IDM_IMAGELOAD
+    "^I", IDM_IMAGESAVE
+    VK_DELETE, IDM_IMAGEDEL, VIRTKEY
+    "^E", IDM_IMAGEEDIT
+END
+
+MAINFORM DIALOG 100, 100, 245, 140
+CLASS "ICONIZERWND"
+CAPTION "Iconizer"
+STYLE WS_CAPTION | WS_VISIBLE | WS_SYSMENU | WS_MINIMIZEBOX | WS_POPUP
+EXSTYLE WS_EX_APPWINDOW
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+MENU MAINMENU
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LISTBOX CTRL_ICONSLISTBOX, 5, 5, 100, 130,
+        WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | WS_VSCROLL | LBS_NOINTEGRALHEIGHT
+    LTEXT "", CTRL_IMAGE, 110, 5, 130, 130, SS_BITMAP | WS_BORDER
+END
+
+ADDIMGDLG DIALOG 10, 10, 323, 170
+CAPTION "Add image"
+STYLE DS_3DLOOK | DS_MODALFRAME | WS_SYSMENU
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+FONT 8, "MS Shell Dlg"
+BEGIN
+    GROUPBOX "Include dimensions: ", ADDIMGDLG_CTLR_GBDIMEN, 5, 5, 75, 102, WS_TABSTOP
+    AUTOCHECKBOX "256x256", ADDIMGDLG_CTLR_ACHB256, 10, 15, 60, 10
+    AUTOCHECKBOX "48x48", ADDIMGDLG_CTLR_ACHB48, 10, 25, 60, 10
+    AUTOCHECKBOX "32x32", ADDIMGDLG_CTLR_ACHB32, 10, 35, 60, 10
+    AUTOCHECKBOX "24x24", ADDIMGDLG_CTLR_ACHB24, 10, 45, 60, 10
+    AUTOCHECKBOX "16x16", ADDIMGDLG_CTLR_ACHB16, 10, 55, 60, 10
+    AUTOCHECKBOX "Custom:", ADDIMGDLG_CTLR_ACHBCUSTOM, 10, 65, 60, 10
+    LTEXT "Width:", ADDIMGDLG_CTLR_LABWIDTH, 13, 77, 25, 10
+    EDITTEXT ADDIMGDLG_CTLR_EDTWIDTH, 40, 75, 35, 12
+    LTEXT "Height:", ADDIMGDLG_CTLR_LABHEIGHT, 13, 92, 25, 10
+    EDITTEXT ADDIMGDLG_CTLR_EDTHEIGHT, 40, 90, 35, 12
+    GROUPBOX "Color depths: ", ADDIMGDLG_CTLR_GBDEPTH, 85, 5, 55, 55, WS_TABSTOP
+    AUTOCHECKBOX "PNG", ADDIMGDLG_CTLR_ACHBPNG, 90, 15, 45, 10
+    AUTOCHECKBOX "RGBA", ADDIMGDLG_CTLR_ACHBRGBA, 90, 25, 45, 10
+    AUTOCHECKBOX "8 bit", ADDIMGDLG_CTLR_ACHB8BIT, 90, 35, 45, 10
+    AUTOCHECKBOX "4 bit", ADDIMGDLG_CTLR_ACHB4BIT, 90, 45, 45, 10
+    GROUPBOX "Preset: ", ADDIMGDLG_CTLR_GBPRESET, 85, 60, 55, 47, WS_TABSTOP
+    PUSHBUTTON "Vista", ADDIMGDLG_CTLR_BTNVISTA, 90, 70, 45, 15
+    PUSHBUTTON "XP/2000", ADDIMGDLG_CTLR_BTNXP, 90, 88, 45, 15
+    GROUPBOX "Transparent color: ", ADDIMGDLG_CTLR_GBTRANSP, 5, 108, 135, 29, WS_TABSTOP
+    PUSHBUTTON "Set", ADDIMGDLG_CTLR_BTNTRANSPSET, 10, 118, 45, 15
+    PUSHBUTTON "Clear", ADDIMGDLG_CTLR_BTNTRANSPCLEAR, 60, 118, 45, 15
+    LTEXT "", ADDIMGDLG_CTLR_TRANSPCOL, 110, 118, 15, 15, SS_BITMAP
+    AUTOCHECKBOX "Allow dithering", ADDIMGDLG_CTLR_ACHBDITHER, 5, 139, 70, 10
+    AUTOCHECKBOX "Optimal palette", ADDIMGDLG_CTLR_ACHBOPTIMAL, 75, 139, 70, 10
+    LTEXT "", ADDIMGDLG_CTLR_IMAGE, 145, 5, 173, 160,
+        SS_BITMAP | WS_BORDER | SS_NOTIFY
+    PUSHBUTTON "&OK", IDOK, 35, 150, 50, 15
+    DEFPUSHBUTTON "&Cancel", IDCANCEL, 90, 150, 50, 15
+END
+
+EDITIMGDLG DIALOG 0, 0, 200, 200
+CAPTION "Image editor"
+STYLE DS_3DLOOK | DS_MODALFRAME | WS_SYSMENU
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL "", EDTIMGDLG_CTLR_TOOLBAR, "ToolbarWindow32",
+        WS_CHILD | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS, 0, 0, 200, 26
+    GROUPBOX "Palette", EDTIMGDLG_CTLR_GBPALETTE, 0, 0, 55, 47, WS_TABSTOP
+    GROUPBOX "Image", EDTIMGDLG_CTLR_GBIMAGE, 0, 0, 55, 47, WS_TABSTOP
+    PUSHBUTTON "&OK", IDOK, 35, 155, 50, 15
+    DEFPUSHBUTTON "&Cancel", IDCANCEL, 90, 155, 50, 15
+    //EDITTEXT 220, 80, 40, 80, 80, WS_BORDER | ES_MULTILINE | ES_AUTOVSCROLL | ES_LEFT | WS_CHILD
+END

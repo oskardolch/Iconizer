@@ -1,0 +1,77 @@
+LIBZINC=../libpngandz/zlib
+LIBPNGINC=../libpngandz/libpng
+
+BUILDDIR=build
+
+SUFFIX=32
+
+VPATH=C:/mingw$(SUFFIX)/Lib;./$(BUILDDIR)
+CFLAGS=-c -O2 -DUNICODE -D_UNICODE -DWINVER=0x0501 -D_MSXML_H_ -I$(LIBZINC) -I$(LIBPNGINC)
+# CFLAGS=-c -O2 -DWINVER=0x0501 -D_WIN32_IE=0x0400 -I$(LIBZINC) -I$(LIBPNGINC)
+
+PREFIX=
+TOOLPFX=
+CC=$(PREFIX)gcc
+CP=$(PREFIX)g++
+RC=$(TOOLPFX)windres
+DL=$(TOOLPFX)dlltool
+
+# ole32 defines CoInitialize, CoUninitialize
+# oleaut32 defines CoCreateInstance
+# uuid defines GUID_NULL
+
+Iconizerobj = Iconizer.o MainForm.o AddImageDlg.o Render.o Editor.o Iconizer_res.o COMUtils.o \
+	XMLUtils.o msxml_def.o Quantize.o libPNGUtils.a
+Iconizermod = $(addprefix $(BUILDDIR)/, $(Iconizerobj)) \
+	-lcomctl32 -lole32 -loleaut32 -luuid -lPNGUtils
+
+pngobj = PNGUtils.o PNGUtilsExp.o
+pngmod = $(addprefix $(BUILDDIR)/, $(pngobj)) \
+	-lgdi32 -lpng -lz
+
+Iconizer : $(Iconizerobj)
+	$(CP) -s -o $(BUILDDIR)/Iconizer -L./$(BUILDDIR) $(Iconizermod) \
+	-static-libgcc -static-libstdc++ -mwindows
+
+PNGUtils : $(pngobj)
+	$(CP) -s -pie -o $(BUILDDIR)/PNGUtils.dll -L./$(BUILDDIR) $(pngmod) \
+	-static-libgcc -static-libstdc++ -mdll
+
+# Template command for compiling .cpp to .o
+%.o : Common/%.cpp
+	$(CC) $(CFLAGS) -o $(BUILDDIR)/$@ $<
+
+# Common source files
+COMUtils.o : Common/COMUtils.cpp Common/COMUtils.hpp
+# msxml_DLL.o : Common/msxml_DLL.cpp Common/msxml_DLL.hpp
+msxml_def.o : Common/msxml_def.cpp Common/msxml_def.hpp
+XMLUtils.o : Common/XMLUtils.cpp Common/XMLUtils.hpp
+
+# Color Quantizer obtained from "http://www.microsoft.com/msj/1097/wicked1097.aspx"
+Quantize.o : Common/Quantize.cpp Common/Quantize.h
+
+# Template command for compiling .cpp to .o
+%.o : src/%.cpp
+	$(CC) $(CFLAGS) -o $(BUILDDIR)/$@ $<
+
+# Iconizer source files
+Iconizer_res.o : src/Iconizer_en.rc src/Iconizer.rh src/Iconizer.exe.manifest.$(SUFFIX)
+	$(RC) src/Iconizer_en.rc -o $(BUILDDIR)/Iconizer_res.o
+MainForm.o : src/MainForm.cpp src/MainForm.hpp src/AddImageDlg.hpp src/Icons.h src/Render.hpp \
+	src/Editor.hpp src/Iconizer.rh Common/XMLUtils.hpp
+AddImageDlg.o : src/AddImageDlg.cpp src/AddImageDlg.hpp src/Render.hpp src/Iconizer.rh Common/XMLUtils.hpp
+Iconizer.o : src/Iconizer.cpp src/MainForm.hpp
+Render.o : src/Render.cpp src/Render.hpp src/Icons.h
+Editor.o : src/Editor.cpp src/Editor.hpp
+libPNGUtils.a : PNGUtils/PNGUtils.hpp PNGUtils/PNGUtils.def
+	$(DL) -d PNGUtils/PNGUtils.def -D PNGUtils.dll -k -A -l $(BUILDDIR)/libPNGUtils.a $(BUILDDIR)/PNGUtils.o
+
+# PNGUtils sources
+PNGUtils.o : PNGUtils/PNGUtils.cpp PNGUtils/PNGUtils.hpp
+	$(CC) $(CFLAGS) -I./PNGUtils PNGUtils/PNGUtils.cpp -o $(BUILDDIR)/PNGUtils.o
+PNGUtilsExp.o : PNGUtils/PNGUtils.cpp PNGUtils/PNGUtils.hpp PNGUtils/PNGUtils.def
+	$(DL) -d PNGUtils/PNGUtils.def -D PNGUtils.dll -k -e $(BUILDDIR)/PNGUtilsExp.o $(BUILDDIR)/PNGUtils.o
+
+#clean
+clean:
+	del $(BUILDDIR)\*.o
