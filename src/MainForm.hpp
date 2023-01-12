@@ -23,6 +23,7 @@
 #include "Icons.h"
 #include "AddImageDlg.hpp"
 #include "Editor.hpp"
+#include "HotSpotDlg.hpp"
 
 class CMainForm
 {
@@ -33,8 +34,11 @@ private:
   TCHAR m_sLastOpenPath[MAX_PATH], m_sCurFileName[MAX_PATH];
   UINT m_uiLBDragMsg;
   int m_iDragItem;
+  double m_dOffsetX;
+  double m_dOffsetY;
   CAddImageDlg *m_AddImgDlg;
   CEditImageDlg *m_EditImgDlg;
+  CHotSpotDlg *m_HotSpotDlg;
 
   void RestoreSettings(HWND hWnd);
   void SaveSettings(HWND hWnd);
@@ -59,6 +63,7 @@ private:
   INT GetIcoFileType(LPTSTR sFileName); // 1 - ICO, 2 - CUR, 3 - Unknown
   INT_PTR ImageDelete(HWND hWnd);
   INT_PTR ImageEdit(HWND hWnd);
+  INT_PTR ImageHotSpot(HWND hWnd);
   INT_PTR ImageSave(HWND hWnd);
   LPICONDATA IconDataFromAddImgData(PADDIMGDATA pAid, int iBitDepth, int iWidth, int iHeight);
   void InsertIconImages(HWND hWnd, PADDIMGDATA pAid);

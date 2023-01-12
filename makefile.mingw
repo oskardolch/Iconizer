@@ -21,7 +21,7 @@ DL=$(TOOLPFX)dlltool
 # uuid defines GUID_NULL
 
 Iconizerobj = Iconizer.o MainForm.o AddImageDlg.o Render.o Editor.o Iconizer_res.o COMUtils.o \
-	XMLUtils.o msxml_def.o Quantize.o libPNGUtils.a
+	XMLUtils.o msxml_def.o Quantize.o HotSpotDlg.o libPNGUtils.a
 Iconizermod = $(addprefix $(BUILDDIR)/, $(Iconizerobj)) \
 	-lcomctl32 -lole32 -loleaut32 -luuid -lPNGUtils
 
@@ -58,11 +58,12 @@ Quantize.o : Common/Quantize.cpp Common/Quantize.h
 Iconizer_res.o : src/Iconizer_en.rc src/Iconizer.rh src/Iconizer.exe.manifest.$(SUFFIX)
 	$(RC) src/Iconizer_en.rc -o $(BUILDDIR)/Iconizer_res.o
 MainForm.o : src/MainForm.cpp src/MainForm.hpp src/AddImageDlg.hpp src/Icons.h src/Render.hpp \
-	src/Editor.hpp src/Iconizer.rh Common/XMLUtils.hpp
+	src/Editor.hpp src/Iconizer.rh Common/XMLUtils.hpp src/HotSpotDlg.hpp
 AddImageDlg.o : src/AddImageDlg.cpp src/AddImageDlg.hpp src/Render.hpp src/Iconizer.rh Common/XMLUtils.hpp
 Iconizer.o : src/Iconizer.cpp src/MainForm.hpp
 Render.o : src/Render.cpp src/Render.hpp src/Icons.h
 Editor.o : src/Editor.cpp src/Editor.hpp
+HotSpotDlg.o : src/HotSpotDlg.cpp src/HotSpotDlg.hpp
 libPNGUtils.a : PNGUtils/PNGUtils.hpp PNGUtils/PNGUtils.def
 	$(DL) -d PNGUtils/PNGUtils.def -D PNGUtils.dll -k -A -l $(BUILDDIR)/libPNGUtils.a $(BUILDDIR)/PNGUtils.o
 

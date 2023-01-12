@@ -21,6 +21,7 @@
 #include "../PNGUtils/PNGUtils.hpp"
 #include "Iconizer.rh"
 #include "Render.hpp"
+#include "HotSpotDlg.hpp"
 
 INT_PTR CALLBACK AddImgDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -120,6 +121,8 @@ INT_PTR CAddImageDlg::WMCommand(HWND hWnd, WORD wNotifyCode, WORD wID, HWND hwnd
     return VistaBtnClick(hWnd);
   case ADDIMGDLG_CTLR_BTNXP:
     return XPBtnClick(hWnd);
+  case ADDIMGDLG_CTLR_BTNCURSOR:
+    return CursorBtnClick(hWnd);
   case ADDIMGDLG_CTLR_BTNTRANSPSET:
     m_bSelectCol = TRUE;
     return 1;
@@ -150,6 +153,9 @@ INT_PTR CAddImageDlg::CustomBtnClick(HWND hWnd, HWND hwndCtl)
 INT_PTR CAddImageDlg::VistaBtnClick(HWND hWnd)
 {
   SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB256, BM_SETCHECK, BST_CHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB128, BM_SETCHECK, BST_UNCHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB96, BM_SETCHECK, BST_UNCHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB64, BM_SETCHECK, BST_UNCHECKED, 0);
   SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB48, BM_SETCHECK, BST_CHECKED, 0);
   SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB32, BM_SETCHECK, BST_CHECKED, 0);
   SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB24, BM_SETCHECK, BST_UNCHECKED, 0);
@@ -167,6 +173,9 @@ INT_PTR CAddImageDlg::VistaBtnClick(HWND hWnd)
 INT_PTR CAddImageDlg::XPBtnClick(HWND hWnd)
 {
   SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB256, BM_SETCHECK, BST_UNCHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB128, BM_SETCHECK, BST_UNCHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB96, BM_SETCHECK, BST_UNCHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB64, BM_SETCHECK, BST_UNCHECKED, 0);
   SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB48, BM_SETCHECK, BST_CHECKED, 0);
   SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB32, BM_SETCHECK, BST_CHECKED, 0);
   SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB24, BM_SETCHECK, BST_UNCHECKED, 0);
@@ -178,6 +187,26 @@ INT_PTR CAddImageDlg::XPBtnClick(HWND hWnd)
   SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHBRGBA, BM_SETCHECK, BST_CHECKED, 0);
   SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB8BIT, BM_SETCHECK, BST_CHECKED, 0);
   SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB4BIT, BM_SETCHECK, BST_CHECKED, 0);
+  return 1;
+}
+
+INT_PTR CAddImageDlg::CursorBtnClick(HWND hWnd)
+{
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB256, BM_SETCHECK, BST_UNCHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB128, BM_SETCHECK, BST_CHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB96, BM_SETCHECK, BST_CHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB64, BM_SETCHECK, BST_CHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB48, BM_SETCHECK, BST_CHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB32, BM_SETCHECK, BST_CHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB24, BM_SETCHECK, BST_UNCHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB16, BM_SETCHECK, BST_UNCHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHBCUSTOM, BM_SETCHECK, BST_UNCHECKED, 0);
+  EnableWindow(GetDlgItem(hWnd, ADDIMGDLG_CTLR_EDTWIDTH), FALSE);
+  EnableWindow(GetDlgItem(hWnd, ADDIMGDLG_CTLR_EDTHEIGHT), FALSE);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHBPNG, BM_SETCHECK, BST_UNCHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHBRGBA, BM_SETCHECK, BST_CHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB8BIT, BM_SETCHECK, BST_UNCHECKED, 0);
+  SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB4BIT, BM_SETCHECK, BST_UNCHECKED, 0);
   return 1;
 }
 
@@ -356,6 +385,12 @@ INT_PTR CAddImageDlg::OKBtnClick(HWND hWnd)
   m_AddImgData->bColorDepth = 0;
   if(SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB256, BM_GETCHECK, 0, 0) == BST_CHECKED)
     m_AddImgData->bSize |= AID_SIZE_256;
+  if(SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB128, BM_GETCHECK, 0, 0) == BST_CHECKED)
+    m_AddImgData->bSize |= AID_SIZE_128;
+  if(SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB96, BM_GETCHECK, 0, 0) == BST_CHECKED)
+    m_AddImgData->bSize |= AID_SIZE_96;
+  if(SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB64, BM_GETCHECK, 0, 0) == BST_CHECKED)
+    m_AddImgData->bSize |= AID_SIZE_64;
   if(SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB48, BM_GETCHECK, 0, 0) == BST_CHECKED)
     m_AddImgData->bSize |= AID_SIZE_48;
   if(SendDlgItemMessage(hWnd, ADDIMGDLG_CTLR_ACHB32, BM_GETCHECK, 0, 0) == BST_CHECKED)

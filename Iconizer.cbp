@@ -1,178 +1,57 @@
-<?xml version="1.0"?>
-<!DOCTYPE CodeBlocks_project_file>
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_project_file>
-	<FileVersion major="1" minor="1"/>
+	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="Iconizer"/>
-		<Option makefile="Makefile"/>
-		<Option makefile_is_custom="0"/>
-		<Option compiler="0"/>
+		<Option title="Iconizer" />
+		<Option pch_mode="0" />
+		<Option compiler="gcc" />
 		<Build>
 			<Target title="default">
-				<Option output="C:\Documents and Settings\pavel\My Documents\Programs\C++\Iconizer\Iconizer.exe"/>
-				<Option working_dir="."/>
-				<Option object_output=".objs"/>
-				<Option deps_output=".deps"/>
-				<Option type="0"/>
-				<Option compiler="0"/>
-				<Option projectResourceIncludeDirsRelation="0"/>
+				<Option output="C:/Documents and Settings/pavel/My Documents/Programs/C++/Iconizer/Iconizer.exe" prefix_auto="0" extension_auto="0" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectResourceIncludeDirsRelation="0" />
 			</Target>
 		</Build>
-		<Unit filename="PNGUtils\PNGUtils.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="default"/>
+		<VirtualTargets>
+			<Add alias="All" targets="default;" />
+		</VirtualTargets>
+		<Unit filename="PNGUtils/PNGUtils.cpp" />
+		<Unit filename="PNGUtils/PNGUtils.def" />
+		<Unit filename="PNGUtils/PNGUtils.hpp" />
+		<Unit filename="common/COMUtils.cpp" />
+		<Unit filename="common/COMUtils.hpp" />
+		<Unit filename="common/Quantize.cpp" />
+		<Unit filename="common/Quantize.h" />
+		<Unit filename="common/XMLUtils.cpp" />
+		<Unit filename="common/XMLUtils.hpp" />
+		<Unit filename="common/msxml_DLL.cpp" />
+		<Unit filename="common/msxml_DLL.hpp" />
+		<Unit filename="common/msxml_def.cpp" />
+		<Unit filename="common/msxml_def.hpp" />
+		<Unit filename="makefile.mingw" />
+		<Unit filename="src/AddImageDlg.cpp" />
+		<Unit filename="src/AddImageDlg.hpp" />
+		<Unit filename="src/Editor.cpp" />
+		<Unit filename="src/Editor.hpp" />
+		<Unit filename="src/HotSpotDlg.cpp" />
+		<Unit filename="src/HotSpotDlg.hpp" />
+		<Unit filename="src/Iconizer.cpp" />
+		<Unit filename="src/Iconizer.exe.manifest.32" />
+		<Unit filename="src/Iconizer.exe.manifest.64" />
+		<Unit filename="src/Iconizer.rh" />
+		<Unit filename="src/Iconizer_en.rc">
+			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="PNGUtils\PNGUtils.def">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="PNGUtils\PNGUtils.hpp">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="common\COMUtils.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="common\COMUtils.hpp">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="common\Quantize.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="common\Quantize.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="common\XMLUtils.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="common\XMLUtils.hpp">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="common\msxml_DLL.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="common\msxml_DLL.hpp">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="common\msxml_def.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="common\msxml_def.hpp">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="makefile.mingw">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\AddImageDlg.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\AddImageDlg.hpp">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\Editor.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\Editor.hpp">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\Iconizer.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\Iconizer.exe.manifest">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\Iconizer.exe.manifest.32">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\Iconizer.exe.manifest.64">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\Iconizer.rh">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\Iconizer_cz.rc">
-			<Option compilerVar="WINDRES"/>
-			<Option objectName="src\Iconizer_cz.res"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\Iconizer_en.rc">
-			<Option compilerVar="WINDRES"/>
-			<Option objectName="src\Iconizer_en.res"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\Icons.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\MainForm.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\MainForm.hpp">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\Render.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\Render.hpp">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
+		<Unit filename="src/Icons.h" />
+		<Unit filename="src/MainForm.cpp" />
+		<Unit filename="src/MainForm.hpp" />
+		<Unit filename="src/Render.cpp" />
+		<Unit filename="src/Render.hpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

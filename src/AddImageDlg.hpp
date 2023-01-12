@@ -24,8 +24,11 @@
 #define AID_SIZE_32 2
 #define AID_SIZE_24 4
 #define AID_SIZE_16 8
-#define AID_SIZE_256 16
-#define AID_SIZE_CUSTOM 32
+#define AID_SIZE_64 16
+#define AID_SIZE_96 32
+#define AID_SIZE_128 64
+#define AID_SIZE_256 128
+#define AID_SIZE_CUSTOM 256
 #define AID_DEPTH_4 1
 #define AID_DEPTH_8 2
 #define AID_DEPTH_RGBA 4
@@ -33,7 +36,7 @@
 
 typedef struct
 {
-  BYTE bSize; // mask containing one or more AID_SIZE_* flags
+  int bSize; // mask containing one or more AID_SIZE_* flags
   BYTE bColorDepth; // mask containing one or more AID_DEPTH_* flags
   DWORD dwTranspColor;
   int iCustWidth; // width and height applicable if AID_SIZE_CUSTOM
@@ -61,6 +64,7 @@ private:
   INT_PTR CustomBtnClick(HWND hWnd, HWND hwndCtl);
   INT_PTR VistaBtnClick(HWND hWnd);
   INT_PTR XPBtnClick(HWND hWnd);
+  INT_PTR CursorBtnClick(HWND hWnd);
   void SetTransparentColor(HWND hWnd, HWND hwndImg);
   void LoadImage(HWND hWnd, HWND hwndCtl);
 

@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <tchar.h>
+#include <math.h>
 #include "MainForm.hpp"
 #include "Iconizer.rh"
 #include "../Common/COMUtils.hpp"
@@ -55,12 +56,14 @@ CMainForm::CMainForm(HINSTANCE hInstance, DLGPROC lpDialogFunc, HWND *phWnd, HAC
 
   m_AddImgDlg = new CAddImageDlg(m_hInstance);
   m_EditImgDlg = new CEditImageDlg(m_hInstance);
+  m_HotSpotDlg = new CHotSpotDlg(m_hInstance);
 
   return;
 }
 
 CMainForm::~CMainForm()
 {
+  delete m_HotSpotDlg;
   delete m_EditImgDlg;
   delete m_AddImgDlg;
   UnregisterClass(_T("ICONIZERWND"), m_hInstance);
@@ -223,6 +226,8 @@ INT_PTR CMainForm::WMCommand(HWND hWnd, WORD wNotifyCode, WORD wID, HWND hwndCtl
     return ImageDelete(hWnd);
   case IDM_IMAGEEDIT:
     return ImageEdit(hWnd);
+  case IDM_IMAGEHOTSPOT:
+    return ImageHotSpot(hWnd);
   case IDM_HELPCONTENT:
     MessageBox(hWnd, _T("Help content"), _T("Not implemented yet"), MB_OK);
     return 1;
@@ -356,6 +361,7 @@ void CMainForm::EnableMenuItems(HWND hWnd)
       if(pid->icdi.wBitCount < 16 && bIsBmp)
         EnableMenuItem(hmnu, IDM_IMAGEEDIT, MF_BYCOMMAND | MF_ENABLED);
     }
+    EnableMenuItem(hmnu, IDM_IMAGEHOTSPOT, MF_BYCOMMAND | MF_ENABLED);
   }
   else
   {
@@ -365,6 +371,7 @@ void CMainForm::EnableMenuItems(HWND hWnd)
     EnableMenuItem(hmnu, IDM_IMAGELOAD, MF_BYCOMMAND | MF_GRAYED);
     EnableMenuItem(hmnu, IDM_IMAGESAVE, MF_BYCOMMAND | MF_GRAYED);
     EnableMenuItem(hmnu, IDM_IMAGEDEL, MF_BYCOMMAND | MF_GRAYED);
+    EnableMenuItem(hmnu, IDM_IMAGEHOTSPOT, MF_BYCOMMAND | MF_GRAYED);
   }
   return;
 }
@@ -473,10 +480,17 @@ BOOL CMainForm::ReadIconFile(HWND hWnd, BOOL bClearLB, LPTSTR sFileName)
     if(bClearLB) ClearListBox(hWnd);
 
     ICONDIR icd;
-    int idx, width, height;;
+    int idx, width, height;
+    int iMaxWidth = 0;
+    int iType = 0;
+    m_dOffsetX = 0;
+    m_dOffsetY = 0;
 
     fread(&icd, 1, 6, fp);
-    if(icd.idReserved == 0) // && icd.idType == 1)
+    if(icd.idType == 1) iType = 1;
+    else if(icd.idType == 2) iType = 2;
+
+    if((icd.idReserved == 0) && (iType > 0))
     {
       bRes = icd.idCount > 0;
       int iListBase = SendMessage(lb, LB_GETCOUNT, 0, 0);
@@ -496,6 +510,15 @@ BOOL CMainForm::ReadIconFile(HWND hWnd, BOOL bClearLB, LPTSTR sFileName)
         _stprintf(sIcoType, _T("%dx%d - %d bpp"), width, height, icdi.wBitCount);
         idx = SendMessage(lb, LB_ADDSTRING, 0, (LPARAM)sIcoType);
         SendMessage(lb, LB_SETITEMDATA, (WPARAM)idx, (LPARAM)lpid);
+        if(iType == 2)
+        {
+          if(width > iMaxWidth)
+          {
+            iMaxWidth = width;
+            m_dOffsetX = (double)icdi.wPlanes/(double)width;
+            m_dOffsetY = (double)icdi.wBitCount/(double)height;
+          }
+        }
       }
       int n = SendMessage(lb, LB_GETCOUNT, 0, 0);
       for(int i = iListBase; i < n; i++)
@@ -512,6 +535,10 @@ BOOL CMainForm::ReadIconFile(HWND hWnd, BOOL bClearLB, LPTSTR sFileName)
 
 void CMainForm::SaveIconFile(HWND hWnd)
 {
+  int iType = 1;
+  int slen = _tcslen(m_sCurFileName);
+  if(_tcsicmp(&m_sCurFileName[slen - 4], _T(".cur")) == 0) iType = 2;
+
   FILE *fp = _tfopen(m_sCurFileName, _T("wb"));
   if(fp)
   {
@@ -519,7 +546,7 @@ void CMainForm::SaveIconFile(HWND hWnd)
 
     ICONDIR icd;
     icd.idReserved = 0;
-    icd.idType = 1;
+    icd.idType = iType;
     icd.idCount = SendMessage(lb, LB_GETCOUNT, 0, 0);
     fwrite(&icd, 1, 6, fp);
 
@@ -529,6 +556,11 @@ void CMainForm::SaveIconFile(HWND hWnd)
     {
       lpid = (LPICONDATA)SendMessage(lb, LB_GETITEMDATA, i, 0);
       lpid->icdi.dwImageOffset = imgoffs;
+      if(iType == 2)
+      {
+        lpid->icdi.wPlanes = (WORD)round(m_dOffsetX*lpid->icdi.bWidth/100.0);
+        lpid->icdi.wBitCount = (WORD)round(m_dOffsetY*lpid->icdi.bHeight/100.0);
+      }
       imgoffs += lpid->icdi.dwBytesInRes;
       fwrite(&lpid->icdi, 1, sizeof(ICONDIRENTRY), fp);
     }
@@ -722,7 +754,7 @@ INT_PTR CMainForm::NewFile(HWND hWnd)
 INT CMainForm::GetIcoFileType(LPTSTR sFileName)
 {
   int slen = _tcslen(sFileName);
-  if(slen < 4) return FALSE;
+  if(slen < 4) return 0;
 
   BOOL bRes = (_tcsicmp(&sFileName[slen - 4], _T(".ico")) == 0) ||
     (_tcsicmp(&sFileName[slen - 4], _T(".cur")) == 0);
@@ -856,7 +888,7 @@ void CMainForm::InsertIconImages(HWND hWnd, PADDIMGDATA pAid)
   LPICONDATA lpid = NULL;
   int idx, idepth, isize;
   int depths[] = {4, 8, 32};
-  int sizes[] = {48, 32, 24, 16};
+  int sizes[] = {48, 32, 24, 16, 64, 96, 128};
   TCHAR buf[32];
 
   for(int i = 0; i < 3; i++)
@@ -864,7 +896,7 @@ void CMainForm::InsertIconImages(HWND hWnd, PADDIMGDATA pAid)
     if(pAid->bColorDepth & (1 << i))
     {
       idepth = depths[i];
-      for(int j = 0; j < 4; j++)
+      for(int j = 0; j < 7; j++)
       {
         if(pAid->bSize & (1 << j))
         {
@@ -923,6 +955,15 @@ INT_PTR CMainForm::ImageEdit(HWND hWnd)
       lpid->hPreview = NULL;
       ListBoxChange(hWnd, lb);
     }
+  }
+  return 1;
+}
+
+INT_PTR CMainForm::ImageHotSpot(HWND hWnd)
+{
+  if(m_HotSpotDlg->ShowModal(hWnd, &m_dOffsetX, &m_dOffsetY))
+  {
+    m_bHasChanged = TRUE;
   }
   return 1;
 }
